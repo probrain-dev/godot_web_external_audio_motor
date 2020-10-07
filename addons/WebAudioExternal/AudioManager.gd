@@ -43,7 +43,7 @@ func loadAudios( filePaths: Array, _pathRelative, _config = {}):
 	audios_list_names[_pathRelative] = filePaths
 	group_audios_config[_pathRelative] = _config.duplicate()
 	if enable:
-		JavascriptManager._js_method_call(js_object_name,engine_to_js["loadAudios"],[filePaths,_pathRelative,_config])
+		JavascriptManager._js_method_call(js_object_name,engine_to_js["loadAudios"],[filePaths,_pathRelative,convert_config(_config)])
 		yield(get_tree(),"idle_frame")
 		yield_audio_load();
 	else:
@@ -68,6 +68,7 @@ func get_group_audio(audio_name):
 			ret = key;
 	return ret
 
+### Spatial control
 func update_listener(new_pos):
 	JavascriptManager._js_method_call(js_object_name,engine_to_js["updateListener"],[new_pos])
 	pass
@@ -89,14 +90,13 @@ func get_pos_listner():
 func get_pos_source(audio):
 	return JavascriptManager._js_method_call(js_object_name,engine_to_js["sourcePos"],[audio,audio_playing[audio]])
 
-
+##### Audio Control
 ### PLAY 
 func play(_audio_name,_config={}):
-	#print("play "+str(_audio_name)+", "+str(_config))
 	if enable and isLoaddedAllAudios:
 		var group_audio = get_group_audio(_audio_name)
 		if typeof(group_audio)== TYPE_INT and group_audio == -1:
-			push_warning("Audio is not Loaded:"+_audio_name+". Please use loadAudios first.")
+			push_warning("Audio is not Loaded: "+_audio_name+". Please use loadAudios first.")
 			return 0;
 		
 		var _config_converted = {}
@@ -104,7 +104,7 @@ func play(_audio_name,_config={}):
 			_config_converted = convert_config(_config)
 		else:
 			_config_converted = convert_config(group_audios_config[group_audio])
-
+		
 		var _id = JavascriptManager._js_method_call(js_object_name,engine_to_js["play"],[_audio_name,_config_converted])
 		audio_playing[_audio_name] = _id;
 		yield_audio_end(_audio_name)
@@ -116,8 +116,6 @@ func play(_audio_name,_config={}):
 func update_config(_new_config,_group_name):
 	var _audio_update = audio_playing.keys()
 	
-	print(_group_name)
-	print(_new_config)
 	var _audios = audios_list_names[_group_name]
 	if _audios.size()>0:
 		_audio_update = _audios
@@ -207,6 +205,5 @@ func pause(_audio_name):
 func stop(_audio_name="",process_all = false):
 	process_audio_config(_audio_name,"stop",process_all)
 
-	
 func mute(_audio_name=""):
 	process_audio_config(_audio_name,"mute")
