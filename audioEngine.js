@@ -137,7 +137,6 @@ AudioEngine.prototype.playAudio = function (audioName, effectsToApply = [],_id=0
   let audioResponse = this.files[audioNameString];
   this.audioKeyPlaying.push(audioNameString);
 
-  //aplica os efeitos com reduce
   if (effectsToApply.length > 0) {
      this.processEffects(audioResponse,effectsToApply);
   }
@@ -146,12 +145,16 @@ AudioEngine.prototype.playAudio = function (audioName, effectsToApply = [],_id=0
       this.removeKeyPlaying(audioNameString)
     }
   });
-  /*audioResponse.once("stop", () => {
+  /*
+	// that fix, if the howler cut end of the audio played
+	audioResponse.once("stop", () => {
 	audioResponse.play();
   });
   audioResponse.stop();*/
-	return audioResponse.play();
+
+  return audioResponse.play();
 };
+
 AudioEngine.prototype.updateConfigAudio = function (_config,_audios) {
 	_audios.forEach(_audio=>{
   		let audioResponse = this.files[_audio];
@@ -160,7 +163,7 @@ AudioEngine.prototype.updateConfigAudio = function (_config,_audios) {
 };
 
 AudioEngine.prototype.processEffects = function (audioResponse,effectsToApply){
-	//propTopropEngine
+	// applyeffects with reduce
 	effectsToApply.reduce((acumulator, item) => {
 	
       if (typeof item == "string") {
@@ -198,6 +201,8 @@ AudioEngine.prototype.processEffects = function (audioResponse,effectsToApply){
 
 
 AudioEngine.prototype.processVolume = function (volume, min=-35, max = 0){
+	if (volume <= min) return 0;
+	if (volume >= max) return 1;
 	var new_volume = 1-(volume/(min+max))
 	new_volume = Math.round(new_volume*100)/100
 	return new_volume

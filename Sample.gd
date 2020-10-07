@@ -5,7 +5,7 @@ var _list_group =[] setget update_group_list
 var _list_audio =[] setget update_audio_list
 var selected_audio = ""
 var group_select = ""
-var _config = {}
+var _config = {"mute":false}
 var selected_index = {}
 
 func _ready():
@@ -31,7 +31,7 @@ func audio_end(_audio_name):
 
 func _on_groupList_item_selected(index):
 	group_select = $Lists/groupList.get_item_text(index)
-	emit_signal("add_log","Change Group to "+group_select)
+	owner.addLog("Change Group to "+group_select)
 	
 	if !AudioManager.group_audios_config.has(group_select):
 		return 0;
@@ -50,7 +50,7 @@ func updateAudioList():
 	$Lists/ItemList.clear()
 	for audio in owner.audio_path_names[group_select]:
 		$Lists/ItemList.add_item(audio)
-		if selected_index.has(audio):
+		if AudioManager.audio_playing.has(audio):
 			$Lists/ItemList.set_item_icon(selected_index[audio], preload("res://icon.png"))
 
 func _on_ItemList_item_selected(index):
@@ -61,7 +61,7 @@ func _on_ItemList_item_selected(index):
 	#PLAY
 	if(!$Lists/ItemList.get_item_icon(index)):
 		$Lists/ItemList.set_item_icon(selected_index[selected_audio], preload("res://icon.png"))
-		AudioManager.play(selected_audio,_config)
+		AudioManager.play(selected_audio)
 		owner.addLog("Play: " +selected_audio)
 	else:
 	#STOP

@@ -2,7 +2,7 @@ extends Node2D
 class_name AudioSpacial2D
 
 export var audio_name = "" setget audio_update
-export var group_name = ""
+
 var config = {}
 export var enable = false setget play_change
 export var isPlaying = false setget play_change
@@ -77,7 +77,7 @@ func _notification(what):
 		
 func change_rect():
 	if is_inside_tree():
-		config["pos"] = [global_position[0],global_position[1],-0.5]
+		update_pos()
 
 
 func update_loop(_loop):
