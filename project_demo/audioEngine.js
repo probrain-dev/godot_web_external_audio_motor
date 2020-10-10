@@ -60,6 +60,8 @@ AudioEngine.prototype.initAudios = function (audio_files, path, config) {
     Howler.autoUnlock = true;
     Howler.autoSuspend = false;
     //Howler.html5PoolSize = 50;
+	console.log(objectHowl);
+
     this.files[audio_files[keyfile]] = new Howl(objectHowl);
   }
 };
@@ -137,7 +139,9 @@ AudioEngine.prototype.playAudio = function (audioName, effectsToApply = [],_id=0
   let audioResponse = this.files[audioNameString];
   this.audioKeyPlaying.push(audioNameString);
 
+  //aplica os efeitos
   if (effectsToApply.length > 0) {
+	console.log("play aplica efeitos") 
      this.processEffects(audioResponse,effectsToApply);
   }
     audioResponse.on("end", () => {
@@ -145,16 +149,13 @@ AudioEngine.prototype.playAudio = function (audioName, effectsToApply = [],_id=0
       this.removeKeyPlaying(audioNameString)
     }
   });
-  /*
-	// that fix, if the howler cut end of the audio played
+  /* //Fix same times howler cut end audio
 	audioResponse.once("stop", () => {
 	audioResponse.play();
   });
   audioResponse.stop();*/
-
-  return audioResponse.play();
+	return audioResponse.play();
 };
-
 AudioEngine.prototype.updateConfigAudio = function (_config,_audios) {
 	_audios.forEach(_audio=>{
   		let audioResponse = this.files[_audio];
@@ -163,46 +164,43 @@ AudioEngine.prototype.updateConfigAudio = function (_config,_audios) {
 };
 
 AudioEngine.prototype.processEffects = function (audioResponse,effectsToApply){
-	// applyeffects with reduce
-	effectsToApply.reduce((acumulator, item) => {
-	
+	//propTopropEngine
+	effectsToApply.forEach((item) => {
       if (typeof item == "string") {
 		// aciona um método diretamente, sem parametro
 		var _key = item;
 		if (item in this.propTopropEngine){
 			_key = this.propTopropEngine[item];
 		}
-        acumulator[_key]();
+        audioResponse[_key]();
       } else {
 		var _key = [item.name];
 		var _value = item.params;
 		
-		if( _key in this.propTopropEngine ){
-			_key.push(this.propTopropEngine[_key])
+		if( _key[0] in this.propTopropEngine ){
+			_key.push(this.propTopropEngine[_key[0]])
 		}
 		
-		if( _key in this.valueTovalueEngine && this.valueTovalueEngine[_key] in this ){
-			_value = [this[this.valueTovalueEngine[_key]](..._value)]
+		if( _key[0] in this.valueTovalueEngine && this.valueTovalueEngine[_key[0]] in this ){
+			_value = [this[this.valueTovalueEngine[_key[0]]](..._value)]
 		}
 		
 		_key.forEach(__key=>{
-			if ( acumulator.hasOwnProperty(__key) && item.params.length==1){
+			if ( audioResponse.hasOwnProperty(__key) && item.params.length==1){
 				console.log("propriedade "+__key+" "+_value);
-				acumulator[__key] = _value;
-			}else if (__key in acumulator) {
-				console.log("metodo "+__key+" "+JSON.stringify(_value));
-				acumulator[__key](..._value);
+				audioResponse[__key] = _value;
+			}else if (__key in audioResponse && typeof(audioResponse[__key])=='function') {
+				console.log("metodo "+__key+" ("+JSON.stringify(..._value)+")" );
+				audioResponse[__key].call(audioResponse,..._value);
 			}
 		})
 	}
-	return acumulator;
-    }, audioResponse);
+
+    });
 }
 
 
 AudioEngine.prototype.processVolume = function (volume, min=-35, max = 0){
-	if (volume <= min) return 0;
-	if (volume >= max) return 1;
 	var new_volume = 1-(volume/(min+max))
 	new_volume = Math.round(new_volume*100)/100
 	return new_volume

@@ -61,7 +61,7 @@ func _on_ItemList_item_selected(index):
 	#PLAY
 	if(!$Lists/ItemList.get_item_icon(index)):
 		$Lists/ItemList.set_item_icon(selected_index[selected_audio], preload("res://icon.png"))
-		AudioManager.play(selected_audio)
+		AudioManager.play(selected_audio,_config)
 		owner.addLog("Play: " +selected_audio)
 	else:
 	#STOP
