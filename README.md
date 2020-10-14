@@ -1,41 +1,36 @@
-# Plugin Web Audio External - GODOT
+# Plugin - External Web Audio - GODOT
 
 [![ProBrain](./poweredby-probrain.jpg)](https://probrain.com.br)
 
-Plugin to use external web audio libraries, in this example we use : [![Howler](./howler.png)](https://howler.js)
+Plugin to use external web audio libraries within GoDot, for this example we used : [![Howler](./howler.png)](https://howler.js)
 
 # Features
- - You can implement any audio plugin JS in your Godot project.
- - Implemented like hooks, you can manage methods as you wish
- - Hook Sample Web Audio manager
- - Hook Spatial 2D Web Audio manager
+ - You can implement any JS audio plugin in your Godot project
+ - Work with hook methods, so you can manage methods with any external JS audio plugin
+ - Standard Web Audio Manager
+ - 2D Spatial Web Audio Manager
  - Group Audio Config Manager
 
-# Fucture Features
- - Hook Spatial 3D Web Audio manager
+# Upcoming Features
+ - 3D Spatial Web Audio Manager
 
-# Instalation
-- Paste the addons folder into your game
-- Active Plugin WebAudioExternal on Godot Settings
+# Installation
+- Paste the addons folder into your game project folder.
+- Enable the Plugin "WebAudioExternal" in the Project Settings.
 
-So they created a two Singleton on your project, JavascriptManager and AudioManager.
-- JavascriptManager - hook methods and properties from Godot to JS
-- AudioManager - Have all generic methods and properties you can use on your Godot Project.
+After that, two singletons will be add into your project, "JavascriptManager" and "AudioManager".
+- JavascriptManager: Hook methods and properties from GoDot to JS.
+- AudioManager: Have all generic methods and properties you can use in your Godot Project.
 
 # Configuration
-To config you need insert the paths of the audio library.
+To config, you need to insert a res:// path to the audio library.
 ```sh
-//example absolut path
-AudioManager._audioMotorPath = ["https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js"]
-```
-or you can insert the resource path, inside Godot
-```sh
-//example path inside Godot
+//Example of a relative path
 AudioManager._audioMotorPath = ["res://howler.min.js"]
 ```
-the plugin need a AudioEngine class on js front, you can insert the file into the end of AudioManager._audioMotorPath, so the Plugin insert on the order of the array. The plugin already has this js configured for you.
+This plugin needs an AudioEngine class to work, it can be inserted at the end of AudioManager._audioMotorPath, the plugin will be instanciated at the end of the array. This plugin already has this class setted for you ;) it uses the Howler Library.
 ```sh
-//example path inside Godot
+//Example of a relative path
 AudioManager._audioMotorPath = ["res://howler.min.js","res://audioEngine.js"]
 ```
 # Implementation with Howler
@@ -43,53 +38,81 @@ AudioManager._audioMotorPath = ["res://howler.min.js","res://audioEngine.js"]
 ```sh
 AudioManager.loadAudios(_audio_names, _path, _config)
 ```
-- _audio_names : list of audio to load, it's gonna be related on the group.
-- _path : the path folder have the audios, the _path its the group of the audio_list.
-- _config : it's a object, can have any kind of properties, that is related on the group. The config it's passed and assygn on the audio object.
+- _audio_names : list of audios to load, it's going to be related to the group.
+- _path : is the path folder with your audios files, this _path will also be the audio_list groups name.
+
+- _config : It's an object, where you can have any kind of properties that are related to the group. The config object will be passed to the audio object. Check some examples below.
 ```sh
 #Example
 AudioManager.loadAudios(["bean","correct"], "Sound/FX", {"loop":false, "pan":-1})
-# Sound/FX - is the path of the audios, and is the group named of then.
-# {"loop":false, "pan":-1} - pass the params to the Howl objecto, and load the audio with that configuration.
+# Sound/FX - is the path to the audios, and is also the group's name.
+# {"loop":false, "pan":-1} - passes the parameters to the Howler object, and loads the audio within that configuration.
 ```
-## Fall Backs - Godot signal
-Any fall backs on the plugin do a request to the js, to update the progress fall back.
-- **updateProgressLoad** : return a float represent the progress loaded(0-1 - represent the all audio loaded)
-- **loadedAllAudios** : fall back loaded all audios
-- **audioEnd** : fall back when the audio playing it's end, return _audio_name of the audio finish.
+## Fallbacks - Godot Signal
+Any fallbacks in this plugin makes a request to the AudioEngine file, in order to validate the status of the fallback call.
+- **updateProgressLoad** : returns a float that represents the loaded progress (From 0 to 1), to be used in any kinda of progressbar or loading screen.
+- **loadedAllAudios** : fallback to sign all loaded audios.
+- **audioEnd** : fallback for when the playing audio reaches its end, it returns the _audio_name when the audio finishes playing.
 
 ## Audio Control
-- **play(audio_name, _config={})**: Begins the playback of a sound.
-        - **audio_name**: audio name of the audio yout want to play.
-        - **_config**: you can send a config object with any property you want change. If you dont pass nothing they load the config from the group. You can see on the [Howler Documentation](https://github.com/goldfire/howler.js#plugin-spatial) each atributes you can set.
+- **play(audio_name, _config={})**: Begins to play the audio.
+        - **audio_name**: Name of the audio you want to play.
+        - **_config**: you can pass a config object with any property you may need to change. If nothing is passed, it will load the standard config settings for the group. You can check at [Howler Documentation](https://github.com/goldfire/howler.js#plugin-spatial) all avaiable atributes.
+```sh
+#Example
+AudioManager.play("bean",{"loop":true})
+# {"loop":false, "pan":-1} - pass the parameters to the Howler object, and loads the audio with that configuration.
+```
 
-- **stop(_name)** : Stop the audio playback of a Sound/Group.
-        - **_name** : Name of the audio stop or the group you want to stop all audios playbacks.
+- **stop(_name)** : Stops the current playing audio, or a whole Group of Audios.
+        - **_name** : Name of the audio you want to stop, or the name of the group of audios you want to stop.
+```sh
+#Example
+AudioManager.stop("bean") // audio
+or
+AudioManager.stop("Sound/FX") // group
+```
 
-- **pause(_name)** : Pause the audio playback of a Sound/Group.
-        - **_name** : Name of the audio pause or the group you want to pause all audios playbacks.
+- **pause(_name)** : Pauses the current playing audio or a Group of Audios.
+        - **_name** : Name of the audio you want to pause, or the name of the group of audios you want to pause.
+```sh
+#Example
+AudioManager.pause("bean") // audio
+or
+AudioManager.pause("Sound/FX") // group
+```
 
-- **mute(_name)** : Mute the audio playback of a Sound/Group.
-        - **_name** : Name of the audio mute or the group you want to mute all audios playbacks.
+- **mute(_name)** : Mute the current playing audio, or a whole Group of audios.
+        - **_name** : Name of the audio you want to mute, or the name of the group of audios you want to mute.
+```sh
+#Example
+AudioManager.mute("bean") // audio
+or
+AudioManager.mute("Sound/FX") // group
+```
 
-### Audio Spatial
-Remember the audio Spatial on Howler, need a more one js to load, the howler.spatial.js, so add then on the AudioManager._audioMotorPath. So the Plugin add two object's node on the Godot, AudioSacial2D and AudioListener2D, both are used to make the audio on the spacial.
-##### AudioSacial2D
-That plugin is audio positioned on the space Godot. All the atributes is taken from the [Howler Spatial](https://github.com/goldfire/howler.js#plugin-spatial)
-- **audio_name** : name of the audio source gonna be played
-- **orientation** : directional audio source is pointing on 3D Cartesian.
-- **loop** : set the loop to the audio source.
-- **volume** : Volume of the audio, even you set volume to the plugin the values of the Godot is [-60 to 0] the plugin  convert the value to Howler.
-- **pitch** : It's the rate of the audio is playing.
-The another atributes is from [pannerAttr](https://github.com/goldfire/howler.js#pannerattro-id) from the Howler.
+### Spatial Audio
+Remember, the Spatial Audio of the Howler Library requires one more js file to be loaded, the "howler.spatial.js", add it to the AudioManager._audioMotorPath. After its inclusion, the Plugin will add two objects nodes into Godot, "AudioSpatial2D" and "AudioListener2D", both are used to set and config the spatial audio inside GoDot.
+##### AudioSpatial2D
+This node is the space position, all atributes are taken from the [Howler Spatial](https://github.com/goldfire/howler.js#plugin-spatial)
+- **audio_name** : name of the audio source you wish to play
+- **orientation** : directional audio source, that is a point on a 3D Cartesian grid.
+- **loop** : sets if the audio should loop or not.
+- **volume** : volume of the audio, it uses GoDots volume value system (From -60 to 0), and converts its values to Howlers.
+- **pitch** : It's the speed of the audio that is playing. (Giving the impression of a higher or lower Pitched Audio)
+Any other atributes are from: [pannerAttr](https://github.com/goldfire/howler.js#pannerattro-id).
 
 ### Playback Change Config
-You can change the config of the audio as wish, same as on playback. You have two method can help you in this.
-- **update_config(_new_config,_group_name)**: change the config for the group, all the audio on the group change your's properties.
-- **update_config_audio(_new_config,_audio_name)**: change the config for the audio source.
+You can change the audio's configuration as you wish, in the same way as done on playbacks. For this, you have two methods that can help you.
+- **update_config(_new_config,_group_name)**: change the configuration values of a group, the new settings will take effect in all audios inside the group. 
+- **update_config_audio(_new_config,_audio_name)**: change the configuration values for a single audio source.
 
 ## Config
-Any config you can change the you can pass atributes or methods to call. The plugin will find that method or atribute and set to then. 
+You can set any value to the Config Object, it will verify if any method or property exists, and if its found, it will update it for you.
+```sh
+#Example
+AudioManager.update_config({mute:true},"Sound/FX")
+```
 
-## Implementation with another js librarie
-You maid need to see audioEngine.js and update the methods for your libraries. 
+## Implementation with another JS library
+You may need to see the audioEngine.js file and manually update the methods for your new JS library. 

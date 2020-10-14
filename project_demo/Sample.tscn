@@ -1,0 +1,177 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://Sample.gd" type="Script" id=1]
+
+[node name="Sample" type="Panel"]
+margin_top = 64.0
+margin_right = 1010.0
+margin_bottom = 465.0
+rect_min_size = Vector2( 1000, 0 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Lists" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Config2" type="Label" parent="Lists"]
+margin_left = 386.349
+margin_top = 14.9437
+margin_right = 512.349
+margin_bottom = 42.9437
+rect_scale = Vector2( 1.76, 1.44 )
+text = "Grupos"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Config3" type="Label" parent="Lists"]
+margin_left = 708.889
+margin_top = 16.2036
+margin_right = 834.889
+margin_bottom = 44.2036
+rect_scale = Vector2( 1.76, 1.44 )
+text = "Audios"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ItemList" type="ItemList" parent="Lists"]
+margin_left = 668.0
+margin_top = 69.0
+margin_right = 1005.0
+margin_bottom = 376.0
+allow_reselect = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="groupList" type="ItemList" parent="Lists"]
+margin_left = 344.0
+margin_top = 70.0
+margin_right = 659.0
+margin_bottom = 375.0
+allow_reselect = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="."]
+margin_top = 16.0
+margin_right = 324.0
+margin_bottom = 265.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Config" type="Label" parent="Control"]
+margin_left = 53.7297
+margin_top = -2.31622
+margin_right = 179.73
+margin_bottom = 25.6838
+rect_scale = Vector2( 1.76, 1.44 )
+text = "Configurações"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Pan" type="HScrollBar" parent="Control"]
+margin_left = 43.0918
+margin_top = 84.3265
+margin_right = 300.092
+margin_bottom = 99.3265
+min_value = -1.0
+max_value = 1.0
+step = 0.1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Pan"]
+margin_left = 55.0
+margin_top = -31.0
+margin_right = 181.0
+margin_bottom = -3.0
+text = "PANNER"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Vollume" type="HScrollBar" parent="Control"]
+margin_left = 44.0356
+margin_top = 133.27
+margin_right = 301.036
+margin_bottom = 148.27
+min_value = -60.0
+max_value = 0.0
+step = 1.0
+value = -10.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Vollume"]
+margin_left = 55.0
+margin_top = -31.0
+margin_right = 181.0
+margin_bottom = -3.0
+text = "VOLUME"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Pitch" type="HScrollBar" parent="Control"]
+margin_left = 44.0356
+margin_top = 181.27
+margin_right = 301.036
+margin_bottom = 196.27
+max_value = 2.0
+step = 0.05
+value = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Pitch"]
+margin_left = 55.0
+margin_top = -31.0
+margin_right = 181.0
+margin_bottom = -3.0
+text = "PITCH"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Loop" type="CheckButton" parent="Control"]
+margin_left = 96.204
+margin_top = 204.071
+margin_right = 222.204
+margin_bottom = 244.071
+text = "Loop"
+align = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="item_selected" from="Lists/ItemList" to="." method="_on_ItemList_item_selected"]
+[connection signal="item_selected" from="Lists/groupList" to="." method="_on_groupList_item_selected"]
+[connection signal="value_changed" from="Control/Pan" to="." method="_on_Pan_value_changed"]
+[connection signal="value_changed" from="Control/Vollume" to="." method="_on_Vollume_value_changed"]
+[connection signal="value_changed" from="Control/Pitch" to="." method="_on_Pitch_value_changed"]
+[connection signal="toggled" from="Control/Loop" to="." method="_on_Loop_toggled"]

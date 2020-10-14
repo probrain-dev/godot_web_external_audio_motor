@@ -22,17 +22,13 @@ func _js_property_call(_object,properties):
 				prop = "."+str(p);
 			else:
 				prop = prop +"['"+str(p)+"']"
-	#print(prop)
 	
 	return _run(_object+prop)
 
 func _js_method_call(_object,_method,_arg=[]):
-	#print(_arg)
 	var args = _args_to_js(_arg)
-	#print(str(_method) + " ( "+str(_arg)+")")
 	
 	var ret = _run(_object+"['"+_method+"']("+args+")")
-	#print("js method ret "+str(ret))
 	return ret
 
 func _args_to_js(_arg):
@@ -81,5 +77,4 @@ func _args_to_js(_arg):
 
 
 func _run(string):
-	#print(string);
 	return JavaScript.eval(string,true)

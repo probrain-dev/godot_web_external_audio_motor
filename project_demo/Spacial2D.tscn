@@ -1,0 +1,483 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://path8face.png" type="Texture" id=1]
+[ext_resource path="res://path862-1-5.png" type="Texture" id=2]
+[ext_resource path="res://addons/WebAudioExternal/AudioSpacial2D.gd" type="Script" id=3]
+[ext_resource path="res://addons/WebAudioExternal/AudioListener2D.gd" type="Script" id=4]
+[ext_resource path="res://Spacial2D.gd" type="Script" id=5]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 75.9943, 76.4961 )
+
+[node name="Spacial2D" type="Panel"]
+margin_right = 800.0
+margin_bottom = 380.0
+rect_min_size = Vector2( 800, 300 )
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false,
+"_editor_description_": ""
+}
+
+[node name="AudioSource" type="Sprite" parent="."]
+position = Vector2( 435.302, 114.892 )
+scale = Vector2( 0.53979, 0.529037 )
+texture = ExtResource( 2 )
+
+[node name="AudioSpacial2D" type="Node2D" parent="AudioSource"]
+scale = Vector2( 1.85257, 1.89023 )
+script = ExtResource( 3 )
+audio_name = "bean"
+coneOuterGain = 0.0
+distanceModel = "exponential"
+maxDistance = 100.0
+refDistance = 10.0
+
+[node name="StaticBody2D" type="StaticBody2D" parent="AudioSource"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="AudioSource/StaticBody2D"]
+shape = SubResource( 1 )
+
+[node name="Listener" type="Sprite" parent="."]
+position = Vector2( 692.39, 312.32 )
+scale = Vector2( 0.391783, 0.385699 )
+texture = ExtResource( 1 )
+
+[node name="AudioListener2D" type="Node2D" parent="Listener"]
+position = Vector2( 1.27625, 0 )
+script = ExtResource( 4 )
+
+[node name="Label" type="Label" parent="Listener"]
+margin_left = -115.603
+margin_top = -118.845
+margin_right = -43.6025
+margin_bottom = -87.8452
+rect_scale = Vector2( 3.14782, 2.05783 )
+text = "text"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="."]
+margin_left = 621.185
+margin_top = 514.601
+margin_right = 646.185
+margin_bottom = 531.601
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="play" type="Button" parent="Control"]
+margin_left = -204.646
+margin_top = -120.925
+margin_right = -65.6461
+margin_bottom = -87.9251
+text = "Play"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="stop" type="Button" parent="Control"]
+margin_left = -357.01
+margin_top = -118.952
+margin_right = -218.01
+margin_bottom = -85.9518
+text = "Stop"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="orientation_listener" type="Control" parent="Control"]
+margin_left = -131.811
+margin_top = 48.1352
+margin_right = 178.189
+margin_bottom = 85.1352
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/orientation_listener"]
+margin_top = -18.1892
+margin_right = 145.0
+margin_bottom = 1.81076
+text = "Orietnation Listener :  "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="x" type="SpinBox" parent="Control/orientation_listener"]
+margin_right = 101.0
+margin_bottom = 24.0
+min_value = -1000.0
+max_value = 1000.0
+step = 0.1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="y" type="SpinBox" parent="Control/orientation_listener"]
+margin_left = 104.851
+margin_right = 205.851
+margin_bottom = 24.0
+min_value = -1000.0
+max_value = 1000.0
+step = 0.1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="z" type="SpinBox" parent="Control/orientation_listener"]
+margin_left = 209.002
+margin_right = 310.002
+margin_bottom = 24.0
+min_value = -1000.0
+max_value = 1000.0
+step = 0.1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="orientation" type="Control" parent="Control"]
+margin_left = -134.4
+margin_top = 2.48633
+margin_right = 175.6
+margin_bottom = 39.4863
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/orientation"]
+margin_top = -18.1892
+margin_right = 128.0
+margin_bottom = 1.81076
+text = "Orietnation Source: "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="x" type="SpinBox" parent="Control/orientation"]
+margin_top = -2.0
+margin_right = 101.0
+margin_bottom = 22.0
+min_value = -1000.0
+max_value = 1000.0
+step = 0.1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="y" type="SpinBox" parent="Control/orientation"]
+margin_left = 104.851
+margin_top = 1.05396
+margin_right = 205.851
+margin_bottom = 25.054
+min_value = -1000.0
+max_value = 1000.0
+step = 0.1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="z" type="SpinBox" parent="Control/orientation"]
+margin_left = 209.002
+margin_right = 310.002
+margin_bottom = 24.0
+min_value = -1000.0
+max_value = 1000.0
+step = 0.1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="sound" type="OptionButton" parent="Control"]
+margin_left = -274.0
+margin_top = -52.0
+margin_right = -89.0
+margin_bottom = -24.0
+rect_scale = Vector2( 1.18723, 1 )
+text = "Bean"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/sound"]
+margin_top = -23.1218
+margin_right = 119.0
+margin_bottom = -3.12181
+text = "Sound  : "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Control" type="Control" parent="Control"]
+anchor_left = 1.712
+anchor_right = 1.712
+margin_left = 392.502
+margin_top = 114.892
+margin_right = 432.502
+margin_bottom = 154.892
+rect_scale = Vector2( 1.44461, 1.44461 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="volume" type="SpinBox" parent="Control/Control"]
+margin_left = -173.596
+margin_top = -413.322
+margin_right = -27.5952
+margin_bottom = -389.322
+min_value = -30.0
+max_value = 0.0
+value = -30.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Control/volume"]
+margin_left = 1.88458
+margin_top = -17.3293
+margin_right = 120.885
+margin_bottom = 2.67068
+text = "Volume : "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="pitch" type="SpinBox" parent="Control/Control"]
+margin_left = -172.504
+margin_top = -367.422
+margin_right = -26.5036
+margin_bottom = -343.422
+max_value = 2.0
+step = 0.05
+value = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Control/pitch"]
+margin_top = -15.1218
+margin_right = 119.0
+margin_bottom = 4.87819
+text = "Pitch : "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="coneInnerAngle" type="SpinBox" parent="Control/Control"]
+margin_left = -173.485
+margin_top = -321.569
+margin_right = -27.485
+margin_bottom = -297.569
+max_value = 360.0
+value = 360.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Control/coneInnerAngle"]
+margin_left = 1.27148
+margin_top = -15.7901
+margin_right = 128.271
+margin_bottom = 4.2099
+text = "ConeInnerAngle : "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="coneOuterAngle" type="SpinBox" parent="Control/Control"]
+margin_left = -173.375
+margin_top = -278.962
+margin_right = -27.3747
+margin_bottom = -254.962
+max_value = 360.0
+value = 360.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Control/coneOuterAngle"]
+margin_left = 1.85248
+margin_top = -15.1218
+margin_right = 131.852
+margin_bottom = 4.87817
+text = "ConeOuterAngle : "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="coneOuterGain" type="SpinBox" parent="Control/Control"]
+margin_left = -173.098
+margin_top = -236.996
+margin_right = -27.0976
+margin_bottom = -212.996
+max_value = 1.0
+step = 0.1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Control/coneOuterGain"]
+margin_top = -15.1218
+margin_right = 119.0
+margin_bottom = 4.87817
+text = "ConeOuterGain : "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="distanceModel" type="OptionButton" parent="Control/Control"]
+margin_left = -171.902
+margin_top = -185.665
+margin_right = -25.9019
+margin_bottom = -162.665
+text = "inverse"
+items = [ "linear", null, false, 0, null, "inverse", null, false, 1, null, "exponential", null, false, 2, null ]
+selected = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Control/distanceModel"]
+margin_top = -15.1218
+margin_right = 119.0
+margin_bottom = 4.87819
+text = "DistanceModel : "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="maxDistance" type="SpinBox" parent="Control/Control"]
+margin_left = -326.884
+margin_top = -155.823
+margin_right = -182.884
+margin_bottom = -131.823
+max_value = 100000.0
+step = 0.1
+value = 100.0
+allow_greater = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Control/maxDistance"]
+margin_top = -15.1218
+margin_right = 119.0
+margin_bottom = 4.87817
+text = "MaxDistance : "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="stereo" type="SpinBox" parent="Control/Control"]
+margin_left = -327.571
+margin_top = -114.893
+margin_right = -181.571
+margin_bottom = -90.8932
+min_value = -1.0
+max_value = 1.0
+step = 0.05
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Control/stereo"]
+margin_top = -15.1218
+margin_right = 119.0
+margin_bottom = 4.87817
+text = "PAN (STEREO) : "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="refDistance" type="SpinBox" parent="Control/Control"]
+margin_left = -169.631
+margin_top = -94.7658
+margin_right = -23.6313
+margin_bottom = -70.7658
+max_value = 10000.0
+step = 0.1
+value = 1.0
+allow_greater = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Control/refDistance"]
+margin_top = -15.1218
+margin_right = 119.0
+margin_bottom = 4.8782
+text = "RefDistance : "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="rolloffFactor" type="SpinBox" parent="Control/Control"]
+margin_left = -170.521
+margin_top = -48.8212
+margin_right = -24.5213
+margin_bottom = -24.8212
+max_value = 10000.0
+step = 0.1
+value = 1.0
+allow_greater = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Control/rolloffFactor"]
+margin_top = -15.1218
+margin_right = 119.0
+margin_bottom = 4.87817
+text = "RollOffFactory : "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="panningModel" type="OptionButton" parent="Control/Control"]
+margin_left = -172.945
+margin_top = -135.304
+margin_right = -26.945
+margin_bottom = -115.304
+text = "equalpower"
+items = [ "equalpower", null, false, 0, null, "HRTF", null, false, 1, null ]
+selected = 0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Control/panningModel"]
+margin_top = -19.2752
+margin_right = 119.0
+margin_bottom = 0.724819
+text = "PanningModel : "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="loop" type="CheckButton" parent="Control/Control"]
+margin_left = -471.0
+margin_top = -62.0
+margin_right = -395.0
+margin_bottom = -22.0
+pressed = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Control/Control/loop"]
+margin_left = -13.77
+margin_top = -15.0
+margin_right = 63.23
+margin_bottom = 5.0
+text = "Loop  : "
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="visibility_changed" from="." to="." method="_on_Spacial2D_visibility_changed"]
+[connection signal="button_up" from="Control/play" to="." method="_on_Button_button_up"]
+[connection signal="button_up" from="Control/stop" to="." method="_on_Button2_button_up"]
+[connection signal="item_selected" from="Control/sound" to="." method="_on_sound_item_selected"]

@@ -35,7 +35,7 @@ func _init():
 	if enable:
 		JavascriptManager.init(_audioMotorPath)
 		JavascriptManager._run("var "+js_object_name+" = new AudioEngine();")
-
+		
 
 ### LOAD AUDIO 
 func loadAudios( filePaths: Array, _pathRelative, _config = {}):
@@ -43,9 +43,9 @@ func loadAudios( filePaths: Array, _pathRelative, _config = {}):
 	audios_list_names[_pathRelative] = filePaths
 	group_audios_config[_pathRelative] = _config.duplicate()
 	if enable:
-		JavascriptManager._js_method_call(js_object_name,engine_to_js["loadAudios"],[filePaths,_pathRelative,convert_config(_config)])
+		JavascriptManager._js_method_call(js_object_name,engine_to_js["loadAudios"],[filePaths,_pathRelative,_config])
 		yield(get_tree(),"idle_frame")
-		yield_audio_load();
+		yield_audio_load()
 	else:
 		yield(get_tree().create_timer(1),"timeout")
 		emit_signal("loadedAllAudios")
@@ -102,6 +102,7 @@ func play(_audio_name,_config={}):
 		var _config_converted = {}
 		if _config != {}:
 			_config_converted = convert_config(_config)
+			group_audios_config[group_audio] = _config
 		else:
 			_config_converted = convert_config(group_audios_config[group_audio])
 		
@@ -171,17 +172,14 @@ func process_audio_config(_audio_name, _config_name, process_all = false):
 		return 0;
 	
 	if audio_playing.has(_audio_name):
-		print("audio_playing "+str(_audio_name))
 		JavascriptManager._js_method_call(js_object_name,engine_to_js[_config_name],[_audio_name])
 	else:
 		var group_playing = get_audios_playing_on_group(_audio_name)
 		if group_playing.size()>0:
-			print("group_playing.size() "+str(group_playing.size()))
 			for _audio in group_playing:
 				JavascriptManager._js_method_call(js_object_name,engine_to_js[_config_name],[_audio])
 		else:
 			if process_all:
-				print("process_all")
 				for key in audio_playing:
 					JavascriptManager._js_method_call(js_object_name,engine_to_js[_config_name],[key])
 			else:

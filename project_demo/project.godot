@@ -1,0 +1,64 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Node",
+"class": "AudioManage",
+"language": "GDScript",
+"path": "res://addons/WebAudioExternal/AudioManager.gd"
+}, {
+"base": "Node2D",
+"class": "AudioSpacial2D",
+"language": "GDScript",
+"path": "res://addons/WebAudioExternal/AudioSpacial2D.gd"
+}, {
+"base": "Node",
+"class": "JavascriptManage",
+"language": "GDScript",
+"path": "res://addons/WebAudioExternal/JavascriptManager.gd"
+} ]
+_global_script_class_icons={
+"AudioManage": "",
+"AudioSpacial2D": "",
+"JavascriptManage": ""
+}
+
+[application]
+
+config/name="Plugin Audio"
+run/main_scene="res://TestePlugin.tscn"
+config/icon="res://icon.png"
+
+[autoload]
+
+JavascriptManager="*res://addons/WebAudioExternal/JavascriptManager.gd"
+AudioManager="*res://addons/WebAudioExternal/AudioManager.gd"
+
+[display]
+
+window/size/resizable=false
+window/size/borderless=true
+window/stretch/mode="2d"
+window/stretch/aspect="keep_width"
+
+[editor]
+
+search_in_file_extensions=PoolStringArray( "gd", "shader", "js" )
+
+[editor_plugins]
+
+enabled=PoolStringArray( "WebAudioExternal" )
+
+[rendering]
+
+quality/driver/driver_name="GLES2"
+vram_compression/import_etc=true
+vram_compression/import_etc2=false
+environment/default_environment="res://default_env.tres"
