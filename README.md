@@ -23,12 +23,7 @@ After that, two singletons will be add into your project, "JavascriptManager" an
 - AudioManager: Have all generic methods and properties you can use in your Godot Project.
 
 # Configuration
-To config, you need to insert a path to the audio library.
-```sh
-//Example of an absolute path
-AudioManager._audioMotorPath = ["https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js"]
-```
-Or you can insert a relative resource path inside Godot
+To config, you need to insert a res:// path to the audio library.
 ```sh
 //Example of a relative path
 AudioManager._audioMotorPath = ["res://howler.min.js"]
