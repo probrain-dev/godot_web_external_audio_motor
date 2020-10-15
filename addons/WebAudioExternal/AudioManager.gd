@@ -2,7 +2,7 @@ extends Node
 class_name AudioManage
 var enable = OS.has_feature('JavaScript')
 var isLoaddedAllAudios = false;
-
+var startLoadFiles = false
 export var _audioMotorPath = ["res://howler.min.js","res://howler.spatial.min.js","res://audioEngine.js"]
 export var audios_list_names = {}
 export var js_object_name = "audioEngine"
@@ -45,10 +45,14 @@ func loadAudios( filePaths: Array, _pathRelative, _config = {}):
 	if enable:
 		JavascriptManager._js_method_call(js_object_name,engine_to_js["loadAudios"],[filePaths,_pathRelative,_config])
 		yield(get_tree(),"idle_frame")
-		yield_audio_load()
+		if !startLoadFiles:
+			startLoadFiles = true
+			yield_audio_load()
 	else:
-		yield(get_tree().create_timer(1),"timeout")
-		emit_signal("loadedAllAudios")
+		if !startLoadFiles:
+			startLoadFiles = true
+			yield(get_tree().create_timer(1),"timeout")
+			emit_signal("loadedAllAudios")
 
 func yield_audio_load():
 	var percent = JavascriptManager._js_method_call(js_object_name,engine_to_js["statusLoad"])
@@ -59,6 +63,7 @@ func yield_audio_load():
 		yield_audio_load()
 	else:
 		emit_signal("loadedAllAudios")
+		startLoadFiles = false
 		isLoaddedAllAudios = true
 
 func get_group_audio(audio_name):
