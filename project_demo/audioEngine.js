@@ -23,8 +23,6 @@ AudioEngine.prototype.initAudios = function (audio_files, path, config) {
     let _path_audio =
       path + "/" + audio_files[keyfile] + "." + this.audiosTypes[0];
     //let _path_audio = path + "/" + audio_files[keyfile] + "." + this.audiosTypes[0];
-    console.log(_path_audio);
-    console.log(config);
     
     let objectHowl = {
       src: [_path_audio],
@@ -55,7 +53,6 @@ AudioEngine.prototype.initAudios = function (audio_files, path, config) {
       },
     };
     objectHowl = Object.assign(objectHowl, config);
-    ///console.log(objectHowl);
 
     Howler.autoUnlock = true;
     Howler.autoSuspend = false;
@@ -106,7 +103,6 @@ AudioEngine.prototype.setSourceOrientation =  function(new_pos, audioID,audioNam
 }
 
 AudioEngine.prototype.updateListenerPosition = function(new_pos){
-	console.log("update listener pos "+new_pos)
 	Howler.pos(...new_pos)
 }
 
@@ -199,7 +195,7 @@ AudioEngine.prototype.processEffects = function (audioResponse,effectsToApply){
     });
 }
 
-
+// Howler manage volume like 0-1, here convert min and max to pattern Howler
 AudioEngine.prototype.processVolume = function (volume, min=-35, max = 0){
 	var new_volume = 1-(volume/(min+max))
 	new_volume = Math.round(new_volume*100)/100
