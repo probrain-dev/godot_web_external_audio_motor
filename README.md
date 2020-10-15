@@ -1,4 +1,5 @@
 # Plugin GODOT - External Web Audio
+Version Godot 3.2.x
 
 [![ProBrain](./poweredby-probrain.jpg)](https://probrain.com.br)
 
