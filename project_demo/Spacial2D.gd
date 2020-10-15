@@ -104,5 +104,5 @@ func _on_sound_item_selected(index):
 
 
 func _on_Button2_button_up():
-	AudioManager.stop()
+	AudioManager.stop($Control/sound.get_item_text($Control/sound.selected))
 	pass # Replace with function body.
