@@ -46,7 +46,7 @@ AudioManager.loadAudios(_audio_names, _path, _config)
 ```sh
 #Example
 AudioManager.loadAudios(["bean","correct"], "Sound/FX", {"loop":false, "pan":-1})
-# Sound/FX - is the path to the audios, and is also the group's name.
+# Sound/FX - is the path to the audios, and is also the group's name. Remember, the path it's reffer to exported project folder, so the audios need to be inside manualy on exported folder.
 # {"loop":false, "pan":-1} - passes the parameters to the Howler object, and loads the audio within that configuration.
 ```
 ## Fallbacks - Godot Signal
