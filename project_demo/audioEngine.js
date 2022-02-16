@@ -32,9 +32,9 @@ AudioEngine.prototype.initAudios = function (audio_files, path, config) {
       xhrWithCredentials: true,
       html5: false,
       mute: true,
-      onplayerror: function (e) {
+      onplayerror: function (audioID, errorCode) {
         let _audio = this;
-        console.log("[onplayerror] " + e);
+        console.log("[onplayerror] " + this._src, "audio ID:", audioID, "Error message/code:", errorCode);
         this.once("unlock", function () {
           _audio.seek();
           _audio.play();
@@ -44,8 +44,8 @@ AudioEngine.prototype.initAudios = function (audio_files, path, config) {
         console.log("[unload] " + this._src);
         this.load();
       },
-      onloaderror: function () {
-        console.log("[onloaderror] " + this._src);
+      onloaderror: function (audioID, errorCode) {
+        console.log("[onloaderror] " + this._src, "audio ID:", audioID, "Error code:", errorCode);
       },
       onload: function () {
         self.loadedFile(this._src);
