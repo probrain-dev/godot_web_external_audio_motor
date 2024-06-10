@@ -1,14 +1,16 @@
 extends Node
 class_name AudioManage
-var enable = OS.has_feature('JavaScript')
+#var enable = OS.has_feature("Javascript")
+var enable =true
 var isLoaddedAllAudios = false;
-
-export var _audioMotorPath = ["res://howler.min.js","res://howler.spatial.min.js","res://audioEngine.js"]
+var startLoadFiles = false
+export var _audioMotorPath = ["res://addons/WebAudioExternal/howler.min.js","res://addons/WebAudioExternal/howler.spatial.min.js","res://addons/WebAudioExternal/audioEngine.js"]
 export var audios_list_names = {}
 export var js_object_name = "audioEngine"
 var audio_playing = {}
 var group_audios_config = {}
 var orientation_listener = [] setget update_orientation_listener
+onready var scene_tree := get_tree()
 
 export var engine_to_js = {
 	"loadAudios":"initAudios",
@@ -23,7 +25,9 @@ export var engine_to_js = {
 	"listenerPos":"getListenerPosition",
 	"sourcePos":"getAudioSourcePosition",
 	"updateSourcePosition":"setSourcePosition",
-	"updateSourceOrientation":"setSourceOrientation"
+	"updateSourceOrientation":"setSourceOrientation",
+	"volumeChange":"processVolume",
+	"mute": "mute"
 }
 
 signal updateProgressLoad;
@@ -31,11 +35,11 @@ signal loadedAllAudios;
 signal audioEnd;
 
 
-func _init():
+func _ready():
 	if enable:
 		JavascriptManager.init(_audioMotorPath)
 		JavascriptManager._run("var "+js_object_name+" = new AudioEngine();")
-		
+		loadAudios(["FileName1,FileName2"],"Folder")
 
 ### LOAD AUDIO 
 func loadAudios( filePaths: Array, _pathRelative, _config = {}):
@@ -44,21 +48,26 @@ func loadAudios( filePaths: Array, _pathRelative, _config = {}):
 	group_audios_config[_pathRelative] = _config.duplicate()
 	if enable:
 		JavascriptManager._js_method_call(js_object_name,engine_to_js["loadAudios"],[filePaths,_pathRelative,_config])
-		yield(get_tree(),"idle_frame")
-		yield_audio_load()
+		yield(scene_tree,"idle_frame")
+		if !startLoadFiles:
+			startLoadFiles = true
+			yield_audio_load()
 	else:
-		yield(get_tree().create_timer(1),"timeout")
-		emit_signal("loadedAllAudios")
+		if !startLoadFiles:
+			startLoadFiles = true
+			yield(scene_tree.create_timer(1.0),"timeout")
+			emit_signal("loadedAllAudios")
 
 func yield_audio_load():
 	var percent = JavascriptManager._js_method_call(js_object_name,engine_to_js["statusLoad"])
 	emit_signal("updateProgressLoad",percent)
 	
-	if float(percent)<1:
-		yield(get_tree().create_timer(0.1),"timeout")
+	if percent and float(percent)<1:
+		yield(scene_tree.root.create_timer(0.1),"timeout")
 		yield_audio_load()
 	else:
 		emit_signal("loadedAllAudios")
+		startLoadFiles = false
 		isLoaddedAllAudios = true
 
 func get_group_audio(audio_name):
@@ -78,9 +87,11 @@ func update_orientation_listener(new_orientation):
 	JavascriptManager._js_method_call(js_object_name,engine_to_js["updateOrientationListener"],[new_orientation])
 
 func update_source_pos(new_pos,audio_name=""):
-	JavascriptManager._js_method_call(js_object_name,engine_to_js["updateSourcePosition"],[new_pos,audio_playing[audio_name],audio_name])
+	if(enable and audio_playing.has(audio_name)):
+		JavascriptManager._js_method_call(js_object_name,engine_to_js["updateSourcePosition"],[new_pos,audio_playing[audio_name],audio_name])
 
 func update_source_orientation(new_or,audio_name=""):
+
 	JavascriptManager._js_method_call(js_object_name,engine_to_js["updateSourceOrientation"],[new_or,audio_playing[audio_name],audio_name])
 
 func get_pos_listner():
@@ -92,6 +103,7 @@ func get_pos_source(audio):
 
 ##### Audio Control
 ### PLAY 
+
 func play(_audio_name,_config={}):
 	if enable and isLoaddedAllAudios:
 		var group_audio = get_group_audio(_audio_name)
@@ -158,7 +170,7 @@ func convert_config(_config):
 
 func yield_audio_end(_audio_name):
 	var index = JavascriptManager._js_method_call(js_object_name,engine_to_js["statusPlay"],[_audio_name])
-	if index >-1:
+	if index and index >-1:
 		yield(get_tree().create_timer(0.1),"timeout")
 		yield_audio_end(_audio_name);
 	else:
@@ -167,23 +179,12 @@ func yield_audio_end(_audio_name):
 
 
 func process_audio_config(_audio_name, _config_name, process_all = false):
+	if _audio_name=="" and _config_name=="mute":
+		JavascriptManager._js_method_call(js_object_name,engine_to_js["mute"],[process_all])
 	if _audio_name=="":
 		push_error("Need a audio_name to pause")
 		return 0;
-	
-	if audio_playing.has(_audio_name):
-		JavascriptManager._js_method_call(js_object_name,engine_to_js[_config_name],[_audio_name])
-	else:
-		var group_playing = get_audios_playing_on_group(_audio_name)
-		if group_playing.size()>0:
-			for _audio in group_playing:
-				JavascriptManager._js_method_call(js_object_name,engine_to_js[_config_name],[_audio])
-		else:
-			if process_all:
-				for key in audio_playing:
-					JavascriptManager._js_method_call(js_object_name,engine_to_js[_config_name],[key])
-			else:
-				push_warning("no one audio to "+_config_name+", "+_audio_name+" not find")
+	JavascriptManager._js_method_call(js_object_name,engine_to_js[_config_name],[_audio_name])
 
 
 func get_audios_playing_on_group(group_name):
@@ -203,5 +204,8 @@ func pause(_audio_name):
 func stop(_audio_name="",process_all = false):
 	process_audio_config(_audio_name,"stop",process_all)
 
-func mute(_audio_name=""):
-	process_audio_config(_audio_name,"mute")
+func mute(mute=true,_audio_name=""):
+	process_audio_config(_audio_name,"mute",mute)
+	
+func volumeChange(volume):
+	JavascriptManager._js_method_call(js_object_name,engine_to_js["volumeChange"],[volume])
